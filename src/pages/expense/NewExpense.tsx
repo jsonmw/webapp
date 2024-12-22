@@ -1,8 +1,16 @@
 import { useFormik } from "formik";
 import { Expense } from "../../model/Expense";
 import expenseValidationSchema from "../../validation/ExpenseValidationSchema";
+import Dropdown from "../../components/Dropdown";
+import { expenseCategories } from "../../utils/AppConstants";
+import { saveOrUpdateExpense } from "../../services/expense-service";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NewExpense = () => {
+  const navigate = useNavigate();
+  const [error, setErrors] = useState<string>("")
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -12,7 +20,16 @@ const NewExpense = () => {
       date: new Date().toISOString().split("T")[0],
     },
     onSubmit: (values: Expense) => {
-      console.log(values);
+      saveOrUpdateExpense(values)
+        .then(response => {
+          if(response && response.status === 201) {
+            navigate('/');
+          }
+        })
+        .catch(error => { 
+          console.log(error);
+          setErrors(error.message);
+        });
     },
     validationSchema: expenseValidationSchema,
   });
@@ -21,6 +38,7 @@ const NewExpense = () => {
     <>
       <div className="d-flex justify-content-center align-items-center mt-2">
         <div className="container col-md-4 col-sm-8 col-xs 12">
+        {error && <p className="text-danger fs-italic">{error}</p>}
           <form onSubmit={formik.handleSubmit}>
             <div className="mb-3">
               <label htmlFor="name" className="form-label">
@@ -91,6 +109,17 @@ const NewExpense = () => {
                 </div>
               ) : null}
             </div>
+            <Dropdown
+              options={expenseCategories}
+              id="category"
+              name="category"
+              label="Category"
+              value={formik.values.category}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.category}
+              touched={formik.touched.category}
+            />
             <button
               className="btn btn-sm btn-primary btn-outline-light"
               type="submit"

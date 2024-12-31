@@ -17,7 +17,7 @@ const NewExpense = () => {
   const [isLoading, setLoader] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState<Expense>({
     name: "",
-    amount: 0,
+    amount: "",
     note: "",
     category: "",
     date: new Date().toISOString().split("T")[0],
@@ -145,11 +145,29 @@ const NewExpense = () => {
               error={formik.errors.category}
               touched={formik.touched.category}
             />
+            {isLoading && (
+            <button
+              className="btn btn-sm app-primary-bg-color btn-outline-light"
+              type="submit"
+              disabled
+            >
+              Loading...
+            </button>
+          )}
+          {!isLoading && (
             <button
               className="btn btn-sm app-primary-bg-color btn-outline-light"
               type="submit"
             >
-              Submit
+              Save
+            </button>
+          )}
+            <button
+              className="btn btn-sm app-primary-bg-color btn-outline-light mx-1"
+              type="reset"
+              onClick={formik.handleReset}
+            >
+              Reset
             </button>
           </form>
         </div>

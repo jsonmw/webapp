@@ -4,7 +4,7 @@ import loginValidationSchema from "../../validation/loginValidationSchema";
 import { useLogin } from "../../hooks/useLogin";
 
 const Login = () => {
-  const {login, isLoading, error} = useLogin();
+  const { login, isLoading, error } = useLogin();
   const formik = useFormik<AuthRequest>({
     initialValues: {
       email: "",
@@ -61,11 +61,29 @@ const Login = () => {
               </div>
             ) : null}
           </div>
+          {isLoading && (
+            <button
+              className="btn btn-sm app-primary-bg-color btn-outline-light"
+              type="submit"
+              disabled
+            >
+              Loading...
+            </button>
+          )}
+          {!isLoading && (
+            <button
+              className="btn btn-sm app-primary-bg-color btn-outline-light"
+              type="submit"
+            >
+              Login
+            </button>
+          )}
           <button
-            className="btn btn-sm app-primary-bg-color btn-outline-light"
-            type="submit"
+            className="btn btn-sm app-primary-bg-color btn-outline-light mx-1"
+            type="reset"
+            onClick={formik.handleReset}
           >
-            Login
+            Reset
           </button>
         </form>
       </div>

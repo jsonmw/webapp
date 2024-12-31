@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Profile } from "../model/Profile";
-import createProfile from "../services/auth-service";
+import { createProfile } from "../services/auth-service";
 
 export const useRegister = () => {
   const [error, setError] = useState<string>("");
@@ -21,5 +21,3 @@ export const useRegister = () => {
 
   return {error, isLoading, signup, toast};
 };
-
-export default useRegister;
